@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -33,18 +34,25 @@ func Main() int {
 			return 1
 		}
 	case cliIntentConfigValidate:
-		contents, _, err := parseYAMLIncludes(options.configPath)
+		contents, _, err := parseConfigIncludes(options.configPath)
 		if err != nil {
 			fmt.Printf("Could not parse config file: %v\n", err)
 			return 1
 		}
 
-		if _, err := newConfigFromYAML(contents); err != nil {
-			fmt.Printf("Config file is invalid: %v\n", err)
-			return 1
+		if strings.HasSuffix(options.configPath, ".json") {
+			if _, err := newConfigFromJSON(contents); err != nil {
+				fmt.Printf("Config file is invalid: %v\n", err)
+				return 1
+			}
+		} else {
+			if _, err := newConfigFromYAML(contents); err != nil {
+				fmt.Printf("Config file is invalid: %v\n", err)
+				return 1
+			}
 		}
 	case cliIntentConfigPrint:
-		contents, _, err := parseYAMLIncludes(options.configPath)
+		contents, _, err := parseConfigIncludes(options.configPath)
 		if err != nil {
 			fmt.Printf("Could not parse config file: %v\n", err)
 			return 1
@@ -103,7 +111,15 @@ func serveApp(configPath string) error {
 			log.Println("Config file changed, reloading...")
 		}
 
-		config, err := newConfigFromYAML(newContents)
+		var config *config
+		var err error
+
+		if strings.HasSuffix(configPath, ".json") {
+			config, err = newConfigFromJSON(newContents)
+		} else {
+			config, err = newConfigFromYAML(newContents)
+		}
+
 		if err != nil {
 			log.Printf("Config has errors: %v", err)
 
@@ -149,7 +165,7 @@ func serveApp(configPath string) error {
 		log.Printf("Error watching config files: %v", err)
 	}
 
-	configContents, configIncludes, err := parseYAMLIncludes(configPath)
+	configContents, configIncludes, err := parseConfigIncludes(configPath)
 	if err != nil {
 		return fmt.Errorf("parsing config: %w", err)
 	}
@@ -160,7 +176,13 @@ func serveApp(configPath string) error {
 	} else {
 		log.Printf("Error starting file watcher, config file changes will require a manual restart. (%v)", err)
 
-		config, err := newConfigFromYAML(configContents)
+		var config *config
+		if strings.HasSuffix(configPath, ".json") {
+			config, err = newConfigFromJSON(configContents)
+		} else {
+			config, err = newConfigFromYAML(configContents)
+		}
+
 		if err != nil {
 			return fmt.Errorf("validating config file: %w", err)
 		}

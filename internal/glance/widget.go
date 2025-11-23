@@ -12,6 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"encoding/json"
 	"gopkg.in/yaml.v3"
 )
 
@@ -123,6 +124,36 @@ func (w *widgets) UnmarshalYAML(node *yaml.Node) error {
 	return nil
 }
 
+func (w *widgets) UnmarshalJSON(data []byte) error {
+	var rawWidgets []json.RawMessage
+	if err := json.Unmarshal(data, &rawWidgets); err != nil {
+		return err
+	}
+
+	for _, raw := range rawWidgets {
+		meta := struct {
+			Type string `json:"type"`
+		}{}
+
+		if err := json.Unmarshal(raw, &meta); err != nil {
+			return err
+		}
+
+		widget, err := newWidget(meta.Type)
+		if err != nil {
+			return err
+		}
+
+		if err := json.Unmarshal(raw, widget); err != nil {
+			return err
+		}
+
+		*w = append(*w, widget)
+	}
+
+	return nil
+}
+
 type widget interface {
 	// These need to be exported because they get called in templates
 	Render() template.HTML
@@ -147,23 +178,23 @@ const (
 )
 
 type widgetBase struct {
-	ID                  uint64           `yaml:"-"`
-	Providers           *widgetProviders `yaml:"-"`
-	Type                string           `yaml:"type"`
-	Title               string           `yaml:"title"`
-	TitleURL            string           `yaml:"title-url"`
-	HideHeader          bool             `yaml:"hide-header"`
-	CSSClass            string           `yaml:"css-class"`
-	CustomCacheDuration durationField    `yaml:"cache"`
-	ContentAvailable    bool             `yaml:"-"`
-	WIP                 bool             `yaml:"-"`
-	Error               error            `yaml:"-"`
-	Notice              error            `yaml:"-"`
-	templateBuffer      bytes.Buffer     `yaml:"-"`
-	cacheDuration       time.Duration    `yaml:"-"`
-	cacheType           cacheType        `yaml:"-"`
-	nextUpdate          time.Time        `yaml:"-"`
-	updateRetriedTimes  int              `yaml:"-"`
+	ID                  uint64           `yaml:"-" json:"-"`
+	Providers           *widgetProviders `yaml:"-" json:"-"`
+	Type                string           `yaml:"type" json:"type"`
+	Title               string           `yaml:"title" json:"title"`
+	TitleURL            string           `yaml:"title-url" json:"title-url"`
+	HideHeader          bool             `yaml:"hide-header" json:"hide-header"`
+	CSSClass            string           `yaml:"css-class" json:"css-class"`
+	CustomCacheDuration durationField    `yaml:"cache" json:"cache"`
+	ContentAvailable    bool             `yaml:"-" json:"-"`
+	WIP                 bool             `yaml:"-" json:"-"`
+	Error               error            `yaml:"-" json:"-"`
+	Notice              error            `yaml:"-" json:"-"`
+	templateBuffer      bytes.Buffer     `yaml:"-" json:"-"`
+	cacheDuration       time.Duration    `yaml:"-" json:"-"`
+	cacheType           cacheType        `yaml:"-" json:"-"`
+	nextUpdate          time.Time        `yaml:"-" json:"-"`
+	updateRetriedTimes  int              `yaml:"-" json:"-"`
 }
 
 type widgetProviders struct {

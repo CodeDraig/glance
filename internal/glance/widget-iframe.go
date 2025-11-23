@@ -10,10 +10,10 @@ import (
 var iframeWidgetTemplate = mustParseTemplate("iframe.html", "widget-base.html")
 
 type iframeWidget struct {
-	widgetBase `yaml:",inline"`
-	cachedHTML template.HTML `yaml:"-"`
-	Source     string        `yaml:"source"`
-	Height     int           `yaml:"height"`
+	widgetBase `yaml:",inline" json:",inline"`
+	cachedHTML template.HTML `yaml:"-" json:"-"`
+	Source     string        `yaml:"source" json:"source"`
+	Height     int           `yaml:"height" json:"height"`
 }
 
 func (widget *iframeWidget) initialize() error {

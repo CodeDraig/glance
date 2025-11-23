@@ -5,8 +5,8 @@ import (
 )
 
 type htmlWidget struct {
-	widgetBase `yaml:",inline"`
-	Source     template.HTML `yaml:"source"`
+	widgetBase `yaml:",inline" json:",inline"`
+	Source     template.HTML `yaml:"source" json:"source"`
 }
 
 func (widget *htmlWidget) initialize() error {

@@ -14,11 +14,11 @@ import (
 var twitchGamesWidgetTemplate = mustParseTemplate("twitch-games-list.html", "widget-base.html")
 
 type twitchGamesWidget struct {
-	widgetBase    `yaml:",inline"`
-	Categories    []twitchCategory `yaml:"-"`
-	Exclude       []string         `yaml:"exclude"`
-	Limit         int              `yaml:"limit"`
-	CollapseAfter int              `yaml:"collapse-after"`
+	widgetBase    `yaml:",inline" json:",inline"`
+	Categories    []twitchCategory `yaml:"-" json:"-"`
+	Exclude       []string         `yaml:"exclude" json:"exclude"`
+	Limit         int              `yaml:"limit" json:"limit"`
+	CollapseAfter int              `yaml:"collapse-after" json:"collapse-after"`
 }
 
 func (widget *twitchGamesWidget) initialize() error {

@@ -10,8 +10,8 @@ import (
 var groupWidgetTemplate = mustParseTemplate("group.html", "widget-base.html")
 
 type groupWidget struct {
-	widgetBase          `yaml:",inline"`
-	containerWidgetBase `yaml:",inline"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	containerWidgetBase `yaml:",inline" json:",inline"`
 }
 
 func (widget *groupWidget) initialize() error {

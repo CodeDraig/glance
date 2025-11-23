@@ -10,13 +10,13 @@ import (
 var clockWidgetTemplate = mustParseTemplate("clock.html", "widget-base.html")
 
 type clockWidget struct {
-	widgetBase `yaml:",inline"`
-	cachedHTML template.HTML `yaml:"-"`
-	HourFormat string        `yaml:"hour-format"`
+	widgetBase `yaml:",inline" json:",inline"`
+	cachedHTML template.HTML `yaml:"-" json:"-"`
+	HourFormat string        `yaml:"hour-format" json:"hour-format"`
 	Timezones  []struct {
-		Timezone string `yaml:"timezone"`
-		Label    string `yaml:"label"`
-	} `yaml:"timezones"`
+		Timezone string `yaml:"timezone" json:"timezone"`
+		Label    string `yaml:"label" json:"label"`
+	} `yaml:"timezones" json:"timezones"`
 }
 
 func (widget *clockWidget) initialize() error {

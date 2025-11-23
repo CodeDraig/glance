@@ -7,9 +7,9 @@ import (
 var todoWidgetTemplate = mustParseTemplate("todo.html", "widget-base.html")
 
 type todoWidget struct {
-	widgetBase `yaml:",inline"`
-	cachedHTML template.HTML `yaml:"-"`
-	TodoID     string        `yaml:"id"`
+	widgetBase `yaml:",inline" json:",inline"`
+	cachedHTML template.HTML `yaml:"-" json:"-"`
+	TodoID     string        `yaml:"id" json:"id"`
 }
 
 func (widget *todoWidget) initialize() error {

@@ -16,8 +16,8 @@ import (
 var serverStatsWidgetTemplate = mustParseTemplate("server-stats.html", "widget-base.html")
 
 type serverStatsWidget struct {
-	widgetBase `yaml:",inline"`
-	Servers    []serverStatsRequest `yaml:"servers"`
+	widgetBase `yaml:",inline" json:",inline"`
+	Servers    []serverStatsRequest `yaml:"servers" json:"servers"`
 }
 
 func (widget *serverStatsWidget) initialize() error {
@@ -85,18 +85,18 @@ func (widget *serverStatsWidget) Render() template.HTML {
 }
 
 type serverStatsRequest struct {
-	*sysinfo.SystemInfoRequest `yaml:",inline"`
-	Info                       *sysinfo.SystemInfo `yaml:"-"`
-	IsReachable                bool                `yaml:"-"`
-	StatusText                 string              `yaml:"-"`
-	Name                       string              `yaml:"name"`
-	HideSwap                   bool                `yaml:"hide-swap"`
-	Type                       string              `yaml:"type"`
-	URL                        string              `yaml:"url"`
-	Token                      string              `yaml:"token"`
-	Timeout                    durationField       `yaml:"timeout"`
+	*sysinfo.SystemInfoRequest `yaml:",inline" json:",inline"`
+	Info                       *sysinfo.SystemInfo `yaml:"-" json:"-"`
+	IsReachable                bool                `yaml:"-" json:"-"`
+	StatusText                 string              `yaml:"-" json:"-"`
+	Name                       string              `yaml:"name" json:"name"`
+	HideSwap                   bool                `yaml:"hide-swap" json:"hide-swap"`
+	Type                       string              `yaml:"type" json:"type"`
+	URL                        string              `yaml:"url" json:"url"`
+	Token                      string              `yaml:"token" json:"token"`
+	Timeout                    durationField       `yaml:"timeout" json:"timeout"`
 	// Support for other agents
-	// Provider                   string              `yaml:"provider"`
+	// Provider                   string              `yaml:"provider" json:"provider"`
 }
 
 func fetchRemoteServerInfo(infoReq *serverStatsRequest) (*sysinfo.SystemInfo, error) {

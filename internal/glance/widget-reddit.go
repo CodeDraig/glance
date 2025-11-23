@@ -19,31 +19,31 @@ var (
 )
 
 type redditWidget struct {
-	widgetBase          `yaml:",inline"`
-	Posts               forumPostList     `yaml:"-"`
-	Subreddit           string            `yaml:"subreddit"`
-	Proxy               proxyOptionsField `yaml:"proxy"`
-	Style               string            `yaml:"style"`
-	ShowThumbnails      bool              `yaml:"show-thumbnails"`
-	ShowFlairs          bool              `yaml:"show-flairs"`
-	SortBy              string            `yaml:"sort-by"`
-	TopPeriod           string            `yaml:"top-period"`
-	Search              string            `yaml:"search"`
-	ExtraSortBy         string            `yaml:"extra-sort-by"`
-	CommentsURLTemplate string            `yaml:"comments-url-template"`
-	Limit               int               `yaml:"limit"`
-	CollapseAfter       int               `yaml:"collapse-after"`
-	RequestURLTemplate  string            `yaml:"request-url-template"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	Posts               forumPostList     `yaml:"-" json:"-"`
+	Subreddit           string            `yaml:"subreddit" json:"subreddit"`
+	Proxy               proxyOptionsField `yaml:"proxy" json:"proxy"`
+	Style               string            `yaml:"style" json:"style"`
+	ShowThumbnails      bool              `yaml:"show-thumbnails" json:"show-thumbnails"`
+	ShowFlairs          bool              `yaml:"show-flairs" json:"show-flairs"`
+	SortBy              string            `yaml:"sort-by" json:"sort-by"`
+	TopPeriod           string            `yaml:"top-period" json:"top-period"`
+	Search              string            `yaml:"search" json:"search"`
+	ExtraSortBy         string            `yaml:"extra-sort-by" json:"extra-sort-by"`
+	CommentsURLTemplate string            `yaml:"comments-url-template" json:"comments-url-template"`
+	Limit               int               `yaml:"limit" json:"limit"`
+	CollapseAfter       int               `yaml:"collapse-after" json:"collapse-after"`
+	RequestURLTemplate  string            `yaml:"request-url-template" json:"request-url-template"`
 
 	AppAuth struct {
-		Name   string `yaml:"name"`
-		ID     string `yaml:"id"`
-		Secret string `yaml:"secret"`
+		Name   string `yaml:"name" json:"name"`
+		ID     string `yaml:"id" json:"id"`
+		Secret string `yaml:"secret" json:"secret"`
 
 		enabled        bool
 		accessToken    string
 		tokenExpiresAt time.Time
-	} `yaml:"app-auth"`
+	} `yaml:"app-auth" json:"app-auth"`
 }
 
 func (widget *redditWidget) initialize() error {

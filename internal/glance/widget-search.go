@@ -15,14 +15,14 @@ type SearchBang struct {
 }
 
 type searchWidget struct {
-	widgetBase   `yaml:",inline"`
-	cachedHTML   template.HTML `yaml:"-"`
-	SearchEngine string        `yaml:"search-engine"`
-	Bangs        []SearchBang  `yaml:"bangs"`
-	NewTab       bool          `yaml:"new-tab"`
-	Target       string        `yaml:"target"`
-	Autofocus    bool          `yaml:"autofocus"`
-	Placeholder  string        `yaml:"placeholder"`
+	widgetBase   `yaml:",inline" json:",inline"`
+	cachedHTML   template.HTML `yaml:"-" json:"-"`
+	SearchEngine string        `yaml:"search-engine" json:"search-engine"`
+	Bangs        []SearchBang  `yaml:"bangs" json:"bangs"`
+	NewTab       bool          `yaml:"new-tab" json:"new-tab"`
+	Target       string        `yaml:"target" json:"target"`
+	Autofocus    bool          `yaml:"autofocus" json:"autofocus"`
+	Placeholder  string        `yaml:"placeholder" json:"placeholder"`
 }
 
 func convertSearchUrl(url string) string {

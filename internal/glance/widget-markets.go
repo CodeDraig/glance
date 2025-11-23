@@ -15,13 +15,13 @@ import (
 var marketsWidgetTemplate = mustParseTemplate("markets.html", "widget-base.html")
 
 type marketsWidget struct {
-	widgetBase         `yaml:",inline"`
-	StocksRequests     []marketRequest `yaml:"stocks"`
-	MarketRequests     []marketRequest `yaml:"markets"`
-	ChartLinkTemplate  string          `yaml:"chart-link-template"`
-	SymbolLinkTemplate string          `yaml:"symbol-link-template"`
-	Sort               string          `yaml:"sort-by"`
-	Markets            marketList      `yaml:"-"`
+	widgetBase         `yaml:",inline" json:",inline"`
+	StocksRequests     []marketRequest `yaml:"stocks" json:"stocks"`
+	MarketRequests     []marketRequest `yaml:"markets" json:"markets"`
+	ChartLinkTemplate  string          `yaml:"chart-link-template" json:"chart-link-template"`
+	SymbolLinkTemplate string          `yaml:"symbol-link-template" json:"symbol-link-template"`
+	Sort               string          `yaml:"sort-by" json:"sort-by"`
+	Markets            marketList      `yaml:"-" json:"-"`
 }
 
 func (widget *marketsWidget) initialize() error {
@@ -68,10 +68,10 @@ func (widget *marketsWidget) Render() template.HTML {
 }
 
 type marketRequest struct {
-	CustomName string `yaml:"name"`
-	Symbol     string `yaml:"symbol"`
-	ChartLink  string `yaml:"chart-link"`
-	SymbolLink string `yaml:"symbol-link"`
+	CustomName string `yaml:"name" json:"name"`
+	Symbol     string `yaml:"symbol" json:"symbol"`
+	ChartLink  string `yaml:"chart-link" json:"chart-link"`
+	SymbolLink string `yaml:"symbol-link" json:"symbol-link"`
 }
 
 type market struct {

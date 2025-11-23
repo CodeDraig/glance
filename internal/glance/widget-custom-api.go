@@ -25,27 +25,27 @@ var customAPIWidgetTemplate = mustParseTemplate("custom-api.html", "widget-base.
 
 // Needs to be exported for the YAML unmarshaler to work
 type CustomAPIRequest struct {
-	URL                string               `yaml:"url"`
-	AllowInsecure      bool                 `yaml:"allow-insecure"`
-	Headers            map[string]string    `yaml:"headers"`
-	Parameters         queryParametersField `yaml:"parameters"`
-	Method             string               `yaml:"method"`
-	BodyType           string               `yaml:"body-type"`
-	Body               any                  `yaml:"body"`
-	SkipJSONValidation bool                 `yaml:"skip-json-validation"`
-	bodyReader         io.ReadSeeker        `yaml:"-"`
-	httpRequest        *http.Request        `yaml:"-"`
+	URL                string               `yaml:"url" json:"url"`
+	AllowInsecure      bool                 `yaml:"allow-insecure" json:"allow-insecure"`
+	Headers            map[string]string    `yaml:"headers" json:"headers"`
+	Parameters         queryParametersField `yaml:"parameters" json:"parameters"`
+	Method             string               `yaml:"method" json:"method"`
+	BodyType           string               `yaml:"body-type" json:"body-type"`
+	Body               any                  `yaml:"body" json:"body"`
+	SkipJSONValidation bool                 `yaml:"skip-json-validation" json:"skip-json-validation"`
+	bodyReader         io.ReadSeeker        `yaml:"-" json:"-"`
+	httpRequest        *http.Request        `yaml:"-" json:"-"`
 }
 
 type customAPIWidget struct {
-	widgetBase        `yaml:",inline"`
-	*CustomAPIRequest `yaml:",inline"`             // the primary request
-	Subrequests       map[string]*CustomAPIRequest `yaml:"subrequests"`
-	Options           customAPIOptions             `yaml:"options"`
-	Template          string                       `yaml:"template"`
-	Frameless         bool                         `yaml:"frameless"`
-	compiledTemplate  *template.Template           `yaml:"-"`
-	CompiledHTML      template.HTML                `yaml:"-"`
+	widgetBase        `yaml:",inline" json:",inline"`
+	*CustomAPIRequest `yaml:",inline" json:",inline"`             // the primary request
+	Subrequests       map[string]*CustomAPIRequest `yaml:"subrequests" json:"subrequests"`
+	Options           customAPIOptions             `yaml:"options" json:"options"`
+	Template          string                       `yaml:"template" json:"template"`
+	Frameless         bool                         `yaml:"frameless" json:"frameless"`
+	compiledTemplate  *template.Template           `yaml:"-" json:"-"`
+	CompiledHTML      template.HTML                `yaml:"-" json:"-"`
 }
 
 func (widget *customAPIWidget) initialize() error {

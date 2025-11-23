@@ -39,18 +39,18 @@ func (a *application) handleThemeChangeRequest(w http.ResponseWriter, r *http.Re
 }
 
 type themeProperties struct {
-	BackgroundColor          *hslColorField `yaml:"background-color"`
-	PrimaryColor             *hslColorField `yaml:"primary-color"`
-	PositiveColor            *hslColorField `yaml:"positive-color"`
-	NegativeColor            *hslColorField `yaml:"negative-color"`
-	Light                    bool           `yaml:"light"`
-	ContrastMultiplier       float32        `yaml:"contrast-multiplier"`
-	TextSaturationMultiplier float32        `yaml:"text-saturation-multiplier"`
+	BackgroundColor          *hslColorField `yaml:"background-color" json:"background-color"`
+	PrimaryColor             *hslColorField `yaml:"primary-color" json:"primary-color"`
+	PositiveColor            *hslColorField `yaml:"positive-color" json:"positive-color"`
+	NegativeColor            *hslColorField `yaml:"negative-color" json:"negative-color"`
+	Light                    bool           `yaml:"light" json:"light"`
+	ContrastMultiplier       float32        `yaml:"contrast-multiplier" json:"contrast-multiplier"`
+	TextSaturationMultiplier float32        `yaml:"text-saturation-multiplier" json:"text-saturation-multiplier"`
 
-	Key                  string        `yaml:"-"`
-	CSS                  template.CSS  `yaml:"-"`
-	PreviewHTML          template.HTML `yaml:"-"`
-	BackgroundColorAsHex string        `yaml:"-"`
+	Key                  string        `yaml:"-" json:"-"`
+	CSS                  template.CSS  `yaml:"-" json:"-"`
+	PreviewHTML          template.HTML `yaml:"-" json:"-"`
+	BackgroundColorAsHex string        `yaml:"-" json:"-"`
 }
 
 func (t *themeProperties) init() error {

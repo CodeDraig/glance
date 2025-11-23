@@ -2,6 +2,7 @@ package glance
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"html/template"
@@ -29,66 +30,66 @@ const (
 
 type config struct {
 	Server struct {
-		Host       string `yaml:"host"`
-		Port       uint16 `yaml:"port"`
-		Proxied    bool   `yaml:"proxied"`
-		AssetsPath string `yaml:"assets-path"`
-		BaseURL    string `yaml:"base-url"`
-	} `yaml:"server"`
+		Host       string `yaml:"host" json:"host"`
+		Port       uint16 `yaml:"port" json:"port"`
+		Proxied    bool   `yaml:"proxied" json:"proxied"`
+		AssetsPath string `yaml:"assets-path" json:"assets-path"`
+		BaseURL    string `yaml:"base-url" json:"base-url"`
+	} `yaml:"server" json:"server"`
 
 	Auth struct {
-		SecretKey string           `yaml:"secret-key"`
-		Users     map[string]*user `yaml:"users"`
-	} `yaml:"auth"`
+		SecretKey string           `yaml:"secret-key" json:"secret-key"`
+		Users     map[string]*user `yaml:"users" json:"users"`
+	} `yaml:"auth" json:"auth"`
 
 	Document struct {
-		Head template.HTML `yaml:"head"`
-	} `yaml:"document"`
+		Head template.HTML `yaml:"head" json:"head"`
+	} `yaml:"document" json:"document"`
 
 	Theme struct {
-		themeProperties `yaml:",inline"`
-		CustomCSSFile   string `yaml:"custom-css-file"`
+		themeProperties `yaml:",inline" json:",inline"`
+		CustomCSSFile   string `yaml:"custom-css-file" json:"custom-css-file"`
 
-		DisablePicker bool                                     `yaml:"disable-picker"`
-		Presets       orderedYAMLMap[string, *themeProperties] `yaml:"presets"`
-	} `yaml:"theme"`
+		DisablePicker bool                                 `yaml:"disable-picker" json:"disable-picker"`
+		Presets       orderedMap[string, *themeProperties] `yaml:"presets" json:"presets"`
+	} `yaml:"theme" json:"theme"`
 
 	Branding struct {
-		HideFooter         bool          `yaml:"hide-footer"`
-		CustomFooter       template.HTML `yaml:"custom-footer"`
-		LogoText           string        `yaml:"logo-text"`
-		LogoURL            string        `yaml:"logo-url"`
-		FaviconURL         string        `yaml:"favicon-url"`
-		FaviconType        string        `yaml:"-"`
-		AppName            string        `yaml:"app-name"`
-		AppIconURL         string        `yaml:"app-icon-url"`
-		AppBackgroundColor string        `yaml:"app-background-color"`
-	} `yaml:"branding"`
+		HideFooter         bool          `yaml:"hide-footer" json:"hide-footer"`
+		CustomFooter       template.HTML `yaml:"custom-footer" json:"custom-footer"`
+		LogoText           string        `yaml:"logo-text" json:"logo-text"`
+		LogoURL            string        `yaml:"logo-url" json:"logo-url"`
+		FaviconURL         string        `yaml:"favicon-url" json:"favicon-url"`
+		FaviconType        string        `yaml:"-" json:"-"`
+		AppName            string        `yaml:"app-name" json:"app-name"`
+		AppIconURL         string        `yaml:"app-icon-url" json:"app-icon-url"`
+		AppBackgroundColor string        `yaml:"app-background-color" json:"app-background-color"`
+	} `yaml:"branding" json:"branding"`
 
-	Pages []page `yaml:"pages"`
+	Pages []page `yaml:"pages" json:"pages"`
 }
 
 type user struct {
-	Password           string `yaml:"password"`
-	PasswordHashString string `yaml:"password-hash"`
-	PasswordHash       []byte `yaml:"-"`
+	Password           string `yaml:"password" json:"password"`
+	PasswordHashString string `yaml:"password-hash" json:"password-hash"`
+	PasswordHash       []byte `yaml:"-" json:"-"`
 }
 
 type page struct {
-	Title                  string  `yaml:"name"`
-	Slug                   string  `yaml:"slug"`
-	Width                  string  `yaml:"width"`
-	DesktopNavigationWidth string  `yaml:"desktop-navigation-width"`
-	ShowMobileHeader       bool    `yaml:"show-mobile-header"`
-	HideDesktopNavigation  bool    `yaml:"hide-desktop-navigation"`
-	CenterVertically       bool    `yaml:"center-vertically"`
-	HeadWidgets            widgets `yaml:"head-widgets"`
+	Title                  string  `yaml:"name" json:"name"`
+	Slug                   string  `yaml:"slug" json:"slug"`
+	Width                  string  `yaml:"width" json:"width"`
+	DesktopNavigationWidth string  `yaml:"desktop-navigation-width" json:"desktop-navigation-width"`
+	ShowMobileHeader       bool    `yaml:"show-mobile-header" json:"show-mobile-header"`
+	HideDesktopNavigation  bool    `yaml:"hide-desktop-navigation" json:"hide-desktop-navigation"`
+	CenterVertically       bool    `yaml:"center-vertically" json:"center-vertically"`
+	HeadWidgets            widgets `yaml:"head-widgets" json:"head-widgets"`
 	Columns                []struct {
-		Size    string  `yaml:"size"`
-		Widgets widgets `yaml:"widgets"`
-	} `yaml:"columns"`
-	PrimaryColumnIndex int8       `yaml:"-"`
-	mu                 sync.Mutex `yaml:"-"`
+		Size    string  `yaml:"size" json:"size"`
+		Widgets widgets `yaml:"widgets" json:"widgets"`
+	} `yaml:"columns" json:"columns"`
+	PrimaryColumnIndex int8       `yaml:"-" json:"-"`
+	mu                 sync.Mutex `yaml:"-" json:"-"`
 }
 
 func newConfigFromYAML(contents []byte) (*config, error) {
@@ -105,7 +106,28 @@ func newConfigFromYAML(contents []byte) (*config, error) {
 		return nil, err
 	}
 
-	if err = isConfigStateValid(config); err != nil {
+	return initConfig(config)
+}
+
+func newConfigFromJSON(contents []byte) (*config, error) {
+	contents, err := parseConfigVariables(contents)
+	if err != nil {
+		return nil, err
+	}
+
+	config := &config{}
+	config.Server.Port = 8080
+
+	err = json.Unmarshal(contents, config)
+	if err != nil {
+		return nil, err
+	}
+
+	return initConfig(config)
+}
+
+func initConfig(config *config) (*config, error) {
+	if err := isConfigStateValid(config); err != nil {
 		return nil, err
 	}
 
@@ -239,11 +261,11 @@ func formatWidgetInitError(err error, w widget) error {
 
 var configIncludePattern = regexp.MustCompile(`(?m)^([ \t]*)(?:-[ \t]*)?(?:!|\$)include:[ \t]*(.+)$`)
 
-func parseYAMLIncludes(mainFilePath string) ([]byte, map[string]struct{}, error) {
-	return recursiveParseYAMLIncludes(mainFilePath, nil, 0)
+func parseConfigIncludes(mainFilePath string) ([]byte, map[string]struct{}, error) {
+	return recursiveParseConfigIncludes(mainFilePath, nil, 0)
 }
 
-func recursiveParseYAMLIncludes(mainFilePath string, includes map[string]struct{}, depth int) ([]byte, map[string]struct{}, error) {
+func recursiveParseConfigIncludes(mainFilePath string, includes map[string]struct{}, depth int) ([]byte, map[string]struct{}, error) {
 	if depth > CONFIG_INCLUDE_RECURSION_DEPTH_LIMIT {
 		return nil, nil, fmt.Errorf("recursion depth limit of %d reached", CONFIG_INCLUDE_RECURSION_DEPTH_LIMIT)
 	}
@@ -251,6 +273,20 @@ func recursiveParseYAMLIncludes(mainFilePath string, includes map[string]struct{
 	mainFileContents, err := os.ReadFile(mainFilePath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("reading %s: %w", mainFilePath, err)
+	}
+
+	// If it's a JSON file, we don't support includes for now, just return contents
+	if strings.HasSuffix(mainFilePath, ".json") {
+		if includes == nil {
+			includes = make(map[string]struct{})
+		}
+		// Add itself to includes so watcher works
+		// Note: The caller (configFilesWatcher) also adds the main file, but recursive calls might need this?
+		// Actually recursiveParseYAMLIncludes didn't add itself to 'includes' map,
+		// it only added the *included* files.
+		// But wait, the watcher logic uses the returned map.
+		// If I don't add anything to includes, the watcher only watches the main file (handled in watcher).
+		return mainFileContents, includes, nil
 	}
 
 	mainFileAbsPath, err := filepath.Abs(mainFilePath)
@@ -286,7 +322,7 @@ func recursiveParseYAMLIncludes(mainFilePath string, includes map[string]struct{
 
 		includes[includeFilePath] = struct{}{}
 
-		fileContents, includes, err = recursiveParseYAMLIncludes(includeFilePath, includes, depth+1)
+		fileContents, includes, err = recursiveParseConfigIncludes(includeFilePath, includes, depth+1)
 		if err != nil {
 			includesLastErr = err
 			return nil
@@ -347,7 +383,7 @@ func configFilesWatcher(
 	mu := sync.Mutex{}
 
 	parseAndCompareBeforeCallback := func() {
-		currentContents, currentIncludes, err := parseYAMLIncludes(mainFilePath)
+		currentContents, currentIncludes, err := parseConfigIncludes(mainFilePath)
 		if err != nil {
 			onErr(fmt.Errorf("parsing main file contents for comparison: %w", err))
 			return
@@ -537,17 +573,17 @@ func isConfigStateValid(config *config) error {
 }
 
 // Read-only way to store ordered maps from a YAML structure
-type orderedYAMLMap[K comparable, V any] struct {
+type orderedMap[K comparable, V any] struct {
 	keys []K
 	data map[K]V
 }
 
-func newOrderedYAMLMap[K comparable, V any](keys []K, values []V) (*orderedYAMLMap[K, V], error) {
+func newOrderedMap[K comparable, V any](keys []K, values []V) (*orderedMap[K, V], error) {
 	if len(keys) != len(values) {
 		return nil, fmt.Errorf("keys and values must have the same length")
 	}
 
-	om := &orderedYAMLMap[K, V]{
+	om := &orderedMap[K, V]{
 		keys: make([]K, len(keys)),
 		data: make(map[K]V, len(keys)),
 	}
@@ -561,7 +597,7 @@ func newOrderedYAMLMap[K comparable, V any](keys []K, values []V) (*orderedYAMLM
 	return om, nil
 }
 
-func (om *orderedYAMLMap[K, V]) Items() iter.Seq2[K, V] {
+func (om *orderedMap[K, V]) Items() iter.Seq2[K, V] {
 	return func(yield func(K, V) bool) {
 		for _, key := range om.keys {
 			value, ok := om.data[key]
@@ -575,13 +611,13 @@ func (om *orderedYAMLMap[K, V]) Items() iter.Seq2[K, V] {
 	}
 }
 
-func (om *orderedYAMLMap[K, V]) Get(key K) (V, bool) {
+func (om *orderedMap[K, V]) Get(key K) (V, bool) {
 	value, ok := om.data[key]
 	return value, ok
 }
 
-func (self *orderedYAMLMap[K, V]) Merge(other *orderedYAMLMap[K, V]) *orderedYAMLMap[K, V] {
-	merged := &orderedYAMLMap[K, V]{
+func (self *orderedMap[K, V]) Merge(other *orderedMap[K, V]) *orderedMap[K, V] {
+	merged := &orderedMap[K, V]{
 		keys: make([]K, 0, len(self.keys)+len(other.keys)),
 		data: make(map[K]V, len(self.data)+len(other.data)),
 	}
@@ -599,7 +635,7 @@ func (self *orderedYAMLMap[K, V]) Merge(other *orderedYAMLMap[K, V]) *orderedYAM
 	return merged
 }
 
-func (om *orderedYAMLMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
+func (om *orderedMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
 	if node.Kind != yaml.MappingNode {
 		return fmt.Errorf("orderedMap: expected mapping node, got %d", node.Kind)
 	}
@@ -631,6 +667,92 @@ func (om *orderedYAMLMap[K, V]) UnmarshalYAML(node *yaml.Node) error {
 
 		(*om).keys[i/2] = key
 		(*om).data[key] = value
+	}
+
+	return nil
+}
+
+func (om *orderedMap[K, V]) UnmarshalJSON(data []byte) error {
+	// We need to preserve order, so we decode into a slice of map items
+	// This assumes the JSON object is actually an ordered list of key-value pairs
+	// OR we rely on the fact that standard JSON unmarshal into map doesn't preserve order
+	// BUT we want to preserve order from the config file.
+	// Standard JSON objects are unordered. However, many parsers/serializers preserve order.
+	// Go's map is unordered.
+	// To support ordered maps in JSON, we might need to accept an array of objects: [{"key": "val"}, ...]
+	// OR we can try to decode into a json.RawMessage and parse manually, but that's hard.
+	//
+	// A common pattern for ordered maps in JSON is just using an object and hoping the parser respects it,
+	// but Go's json.Unmarshal into map[string]interface{} definitely randomizes it.
+	//
+	// However, since we are defining the config format, we can say that for JSON,
+	// "presets" should be an object, but we can't easily get the order.
+	//
+	// Let's try to unmarshal into a map first to get the data, and then... wait, we lose order.
+	//
+	// If we want strict order in JSON, we should use an array of entries:
+	// "presets": [ {"key": "theme1", "value": {...}}, ... ]
+	// But that changes the structure compared to YAML where it's a map.
+	//
+	// Alternatively, we can use `json.Decoder` and read tokens to preserve order.
+	//
+	// Let's implement a token-based unmarshaler for JSON objects to preserve order.
+
+	dec := json.NewDecoder(bytes.NewReader(data))
+
+	// Expect start of object
+	if t, err := dec.Token(); err != nil {
+		return err
+	} else if delim, ok := t.(json.Delim); !ok || delim != '{' {
+		return fmt.Errorf("orderedMap: expected {, got %v", t)
+	}
+
+	om.keys = make([]K, 0)
+	om.data = make(map[K]V)
+
+	for dec.More() {
+		// Read key
+		t, err := dec.Token()
+		if err != nil {
+			return err
+		}
+
+		keyStr, ok := t.(string)
+		if !ok {
+			return fmt.Errorf("orderedMap: expected string key, got %T", t)
+		}
+
+		// Convert key string to K (assuming K is string for now as it's the only use case)
+		// If K is not string, we might have issues.
+		// The struct definition says K comparable, but JSON keys are always strings.
+		var key K
+		// This is a bit hacky, but we know K is string in our usage (presets).
+		// If we want to be generic, we'd need more reflection or constraints.
+		// For now, let's assume K is string.
+		if _, ok := any(key).(string); !ok {
+			return fmt.Errorf("orderedMap: JSON keys must be strings, but K is %T", key)
+		}
+		key = any(keyStr).(K)
+
+		if _, exists := om.data[key]; exists {
+			return fmt.Errorf("orderedMap: duplicate key %v", key)
+		}
+
+		// Read value
+		var value V
+		if err := dec.Decode(&value); err != nil {
+			return fmt.Errorf("orderedMap: decoding value for key %v: %v", key, err)
+		}
+
+		om.keys = append(om.keys, key)
+		om.data[key] = value
+	}
+
+	// Expect end of object
+	if t, err := dec.Token(); err != nil {
+		return err
+	} else if delim, ok := t.(json.Delim); !ok || delim != '}' {
+		return fmt.Errorf("orderedMap: expected }, got %v", t)
 	}
 
 	return nil

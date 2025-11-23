@@ -7,7 +7,7 @@ import (
 )
 
 type containerWidgetBase struct {
-	Widgets widgets `yaml:"widgets"`
+	Widgets widgets `yaml:"widgets" json:"widgets"`
 }
 
 func (widget *containerWidgetBase) _initializeWidgets() error {

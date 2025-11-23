@@ -14,13 +14,13 @@ import (
 var changeDetectionWidgetTemplate = mustParseTemplate("change-detection.html", "widget-base.html")
 
 type changeDetectionWidget struct {
-	widgetBase       `yaml:",inline"`
-	ChangeDetections changeDetectionWatchList `yaml:"-"`
-	WatchUUIDs       []string                 `yaml:"watches"`
-	InstanceURL      string                   `yaml:"instance-url"`
-	Token            string                   `yaml:"token"`
-	Limit            int                      `yaml:"limit"`
-	CollapseAfter    int                      `yaml:"collapse-after"`
+	widgetBase       `yaml:",inline" json:",inline"`
+	ChangeDetections changeDetectionWatchList `yaml:"-" json:"-"`
+	WatchUUIDs       []string                 `yaml:"watches" json:"watches"`
+	InstanceURL      string                   `yaml:"instance-url" json:"instance-url"`
+	Token            string                   `yaml:"token" json:"token"`
+	Limit            int                      `yaml:"limit" json:"limit"`
+	CollapseAfter    int                      `yaml:"collapse-after" json:"collapse-after"`
 }
 
 func (widget *changeDetectionWidget) initialize() error {

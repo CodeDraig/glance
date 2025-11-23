@@ -16,14 +16,14 @@ import (
 var dockerContainersWidgetTemplate = mustParseTemplate("docker-containers.html", "widget-base.html")
 
 type dockerContainersWidget struct {
-	widgetBase           `yaml:",inline"`
-	HideByDefault        bool                         `yaml:"hide-by-default"`
-	RunningOnly          bool                         `yaml:"running-only"`
-	Category             string                       `yaml:"category"`
-	SockPath             string                       `yaml:"sock-path"`
-	FormatContainerNames bool                         `yaml:"format-container-names"`
-	Containers           dockerContainerList          `yaml:"-"`
-	LabelOverrides       map[string]map[string]string `yaml:"containers"`
+	widgetBase           `yaml:",inline" json:",inline"`
+	HideByDefault        bool                         `yaml:"hide-by-default" json:"hide-by-default"`
+	RunningOnly          bool                         `yaml:"running-only" json:"running-only"`
+	Category             string                       `yaml:"category" json:"category"`
+	SockPath             string                       `yaml:"sock-path" json:"sock-path"`
+	FormatContainerNames bool                         `yaml:"format-container-names" json:"format-container-names"`
+	Containers           dockerContainerList          `yaml:"-" json:"-"`
+	LabelOverrides       map[string]map[string]string `yaml:"containers" json:"containers"`
 }
 
 func (widget *dockerContainersWidget) initialize() error {

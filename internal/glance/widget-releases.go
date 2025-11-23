@@ -18,14 +18,14 @@ import (
 var releasesWidgetTemplate = mustParseTemplate("releases.html", "widget-base.html")
 
 type releasesWidget struct {
-	widgetBase     `yaml:",inline"`
-	Releases       appReleaseList    `yaml:"-"`
-	Repositories   []*releaseRequest `yaml:"repositories"`
-	Token          string            `yaml:"token"`
-	GitLabToken    string            `yaml:"gitlab-token"`
-	Limit          int               `yaml:"limit"`
-	CollapseAfter  int               `yaml:"collapse-after"`
-	ShowSourceIcon bool              `yaml:"show-source-icon"`
+	widgetBase     `yaml:",inline" json:",inline"`
+	Releases       appReleaseList    `yaml:"-" json:"-"`
+	Repositories   []*releaseRequest `yaml:"repositories" json:"repositories"`
+	Token          string            `yaml:"token" json:"token"`
+	GitLabToken    string            `yaml:"gitlab-token" json:"gitlab-token"`
+	Limit          int               `yaml:"limit" json:"limit"`
+	CollapseAfter  int               `yaml:"collapse-after" json:"collapse-after"`
+	ShowSourceIcon bool              `yaml:"show-source-icon" json:"show-source-icon"`
 }
 
 func (widget *releasesWidget) initialize() error {
@@ -104,8 +104,8 @@ func (r appReleaseList) sortByNewest() appReleaseList {
 }
 
 type releaseRequest struct {
-	IncludePreleases bool   `yaml:"include-prereleases"`
-	Repository       string `yaml:"repository"`
+	IncludePreleases bool   `yaml:"include-prereleases" json:"include-prereleases"`
+	Repository       string `yaml:"repository" json:"repository"`
 
 	source releaseSource
 	token  *string

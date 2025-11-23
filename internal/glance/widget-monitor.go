@@ -16,22 +16,22 @@ var (
 )
 
 type monitorWidget struct {
-	widgetBase `yaml:",inline"`
+	widgetBase `yaml:",inline" json:",inline"`
 	Sites      []struct {
-		*SiteStatusRequest `yaml:",inline"`
-		Status             *siteStatus     `yaml:"-"`
-		URL                string          `yaml:"-"`
-		ErrorURL           string          `yaml:"error-url"`
-		Title              string          `yaml:"title"`
-		Icon               customIconField `yaml:"icon"`
-		SameTab            bool            `yaml:"same-tab"`
-		StatusText         string          `yaml:"-"`
-		StatusStyle        string          `yaml:"-"`
-		AltStatusCodes     []int           `yaml:"alt-status-codes"`
-	} `yaml:"sites"`
-	Style           string `yaml:"style"`
-	ShowFailingOnly bool   `yaml:"show-failing-only"`
-	HasFailing      bool   `yaml:"-"`
+		*SiteStatusRequest `yaml:",inline" json:",inline"`
+		Status             *siteStatus     `yaml:"-" json:"-"`
+		URL                string          `yaml:"-" json:"-"`
+		ErrorURL           string          `yaml:"error-url" json:"error-url"`
+		Title              string          `yaml:"title" json:"title"`
+		Icon               customIconField `yaml:"icon" json:"icon"`
+		SameTab            bool            `yaml:"same-tab" json:"same-tab"`
+		StatusText         string          `yaml:"-" json:"-"`
+		StatusStyle        string          `yaml:"-" json:"-"`
+		AltStatusCodes     []int           `yaml:"alt-status-codes" json:"alt-status-codes"`
+	} `yaml:"sites" json:"sites"`
+	Style           string `yaml:"style" json:"style"`
+	ShowFailingOnly bool   `yaml:"show-failing-only" json:"show-failing-only"`
+	HasFailing      bool   `yaml:"-" json:"-"`
 }
 
 func (widget *monitorWidget) initialize() error {
@@ -115,14 +115,14 @@ func statusCodeToStyle(status int, altStatusCodes []int) string {
 }
 
 type SiteStatusRequest struct {
-	DefaultURL    string        `yaml:"url"`
-	CheckURL      string        `yaml:"check-url"`
-	AllowInsecure bool          `yaml:"allow-insecure"`
-	Timeout       durationField `yaml:"timeout"`
+	DefaultURL    string        `yaml:"url" json:"url"`
+	CheckURL      string        `yaml:"check-url" json:"check-url"`
+	AllowInsecure bool          `yaml:"allow-insecure" json:"allow-insecure"`
+	Timeout       durationField `yaml:"timeout" json:"timeout"`
 	BasicAuth     struct {
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"basic-auth"`
+		Username string `yaml:"username" json:"username"`
+		Password string `yaml:"password" json:"password"`
+	} `yaml:"basic-auth" json:"basic-auth"`
 }
 
 type siteStatus struct {

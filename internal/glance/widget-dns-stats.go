@@ -25,21 +25,21 @@ const (
 )
 
 type dnsStatsWidget struct {
-	widgetBase `yaml:",inline"`
+	widgetBase `yaml:",inline" json:",inline"`
 
-	TimeLabels      [8]string `yaml:"-"`
-	Stats           *dnsStats `yaml:"-"`
-	piholeSessionID string    `yaml:"-"`
+	TimeLabels      [8]string `yaml:"-" json:"-"`
+	Stats           *dnsStats `yaml:"-" json:"-"`
+	piholeSessionID string    `yaml:"-" json:"-"`
 
-	HourFormat     string `yaml:"hour-format"`
-	HideGraph      bool   `yaml:"hide-graph"`
-	HideTopDomains bool   `yaml:"hide-top-domains"`
-	Service        string `yaml:"service"`
-	AllowInsecure  bool   `yaml:"allow-insecure"`
-	URL            string `yaml:"url"`
-	Token          string `yaml:"token"`
-	Username       string `yaml:"username"`
-	Password       string `yaml:"password"`
+	HourFormat     string `yaml:"hour-format" json:"hour-format"`
+	HideGraph      bool   `yaml:"hide-graph" json:"hide-graph"`
+	HideTopDomains bool   `yaml:"hide-top-domains" json:"hide-top-domains"`
+	Service        string `yaml:"service" json:"service"`
+	AllowInsecure  bool   `yaml:"allow-insecure" json:"allow-insecure"`
+	URL            string `yaml:"url" json:"url"`
+	Token          string `yaml:"token" json:"token"`
+	Username       string `yaml:"username" json:"username"`
+	Password       string `yaml:"password" json:"password"`
 }
 
 const (

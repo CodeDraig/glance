@@ -29,21 +29,21 @@ var (
 var feedParser = gofeed.NewParser()
 
 type rssWidget struct {
-	widgetBase       `yaml:",inline"`
-	FeedRequests     []rssFeedRequest `yaml:"feeds"`
-	Style            string           `yaml:"style"`
-	ThumbnailHeight  float64          `yaml:"thumbnail-height"`
-	CardHeight       float64          `yaml:"card-height"`
-	Limit            int              `yaml:"limit"`
-	CollapseAfter    int              `yaml:"collapse-after"`
-	SingleLineTitles bool             `yaml:"single-line-titles"`
-	PreserveOrder    bool             `yaml:"preserve-order"`
+	widgetBase       `yaml:",inline" json:",inline"`
+	FeedRequests     []rssFeedRequest `yaml:"feeds" json:"feeds"`
+	Style            string           `yaml:"style" json:"style"`
+	ThumbnailHeight  float64          `yaml:"thumbnail-height" json:"thumbnail-height"`
+	CardHeight       float64          `yaml:"card-height" json:"card-height"`
+	Limit            int              `yaml:"limit" json:"limit"`
+	CollapseAfter    int              `yaml:"collapse-after" json:"collapse-after"`
+	SingleLineTitles bool             `yaml:"single-line-titles" json:"single-line-titles"`
+	PreserveOrder    bool             `yaml:"preserve-order" json:"preserve-order"`
 
-	Items          rssFeedItemList `yaml:"-"`
-	NoItemsMessage string          `yaml:"-"`
+	Items          rssFeedItemList `yaml:"-" json:"-"`
+	NoItemsMessage string          `yaml:"-" json:"-"`
 
 	cachedFeedsMutex sync.Mutex
-	cachedFeeds      map[string]*cachedRSSFeed `yaml:"-"`
+	cachedFeeds      map[string]*cachedRSSFeed `yaml:"-" json:"-"`
 }
 
 func (widget *rssWidget) initialize() error {
@@ -129,14 +129,14 @@ type rssFeedItem struct {
 }
 
 type rssFeedRequest struct {
-	URL             string            `yaml:"url"`
-	Title           string            `yaml:"title"`
-	HideCategories  bool              `yaml:"hide-categories"`
-	HideDescription bool              `yaml:"hide-description"`
-	Limit           int               `yaml:"limit"`
-	ItemLinkPrefix  string            `yaml:"item-link-prefix"`
-	Headers         map[string]string `yaml:"headers"`
-	IsDetailed      bool              `yaml:"-"`
+	URL             string            `yaml:"url" json:"url"`
+	Title           string            `yaml:"title" json:"title"`
+	HideCategories  bool              `yaml:"hide-categories" json:"hide-categories"`
+	HideDescription bool              `yaml:"hide-description" json:"hide-description"`
+	Limit           int               `yaml:"limit" json:"limit"`
+	ItemLinkPrefix  string            `yaml:"item-link-prefix" json:"item-link-prefix"`
+	Headers         map[string]string `yaml:"headers" json:"headers"`
+	IsDetailed      bool              `yaml:"-" json:"-"`
 }
 
 type rssFeedItemList []rssFeedItem

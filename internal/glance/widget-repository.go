@@ -13,13 +13,13 @@ import (
 var repositoryWidgetTemplate = mustParseTemplate("repository.html", "widget-base.html")
 
 type repositoryWidget struct {
-	widgetBase          `yaml:",inline"`
-	RequestedRepository string     `yaml:"repository"`
-	Token               string     `yaml:"token"`
-	PullRequestsLimit   int        `yaml:"pull-requests-limit"`
-	IssuesLimit         int        `yaml:"issues-limit"`
-	CommitsLimit        int        `yaml:"commits-limit"`
-	Repository          repository `yaml:"-"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	RequestedRepository string     `yaml:"repository" json:"repository"`
+	Token               string     `yaml:"token" json:"token"`
+	PullRequestsLimit   int        `yaml:"pull-requests-limit" json:"pull-requests-limit"`
+	IssuesLimit         int        `yaml:"issues-limit" json:"issues-limit"`
+	CommitsLimit        int        `yaml:"commits-limit" json:"commits-limit"`
+	Repository          repository `yaml:"-" json:"-"`
 }
 
 func (widget *repositoryWidget) initialize() error {

@@ -15,11 +15,11 @@ import (
 var twitchChannelsWidgetTemplate = mustParseTemplate("twitch-channels.html", "widget-base.html")
 
 type twitchChannelsWidget struct {
-	widgetBase      `yaml:",inline"`
-	ChannelsRequest []string        `yaml:"channels"`
-	Channels        []twitchChannel `yaml:"-"`
-	CollapseAfter   int             `yaml:"collapse-after"`
-	SortBy          string          `yaml:"sort-by"`
+	widgetBase      `yaml:",inline" json:",inline"`
+	ChannelsRequest []string        `yaml:"channels" json:"channels"`
+	Channels        []twitchChannel `yaml:"-" json:"-"`
+	CollapseAfter   int             `yaml:"collapse-after" json:"collapse-after"`
+	SortBy          string          `yaml:"sort-by" json:"sort-by"`
 }
 
 func (widget *twitchChannelsWidget) initialize() error {

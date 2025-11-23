@@ -21,16 +21,16 @@ var (
 )
 
 type videosWidget struct {
-	widgetBase        `yaml:",inline"`
-	Videos            videoList `yaml:"-"`
-	VideoUrlTemplate  string    `yaml:"video-url-template"`
-	Style             string    `yaml:"style"`
-	CollapseAfter     int       `yaml:"collapse-after"`
-	CollapseAfterRows int       `yaml:"collapse-after-rows"`
-	Channels          []string  `yaml:"channels"`
-	Playlists         []string  `yaml:"playlists"`
-	Limit             int       `yaml:"limit"`
-	IncludeShorts     bool      `yaml:"include-shorts"`
+	widgetBase        `yaml:",inline" json:",inline"`
+	Videos            videoList `yaml:"-" json:"-"`
+	VideoUrlTemplate  string    `yaml:"video-url-template" json:"video-url-template"`
+	Style             string    `yaml:"style" json:"style"`
+	CollapseAfter     int       `yaml:"collapse-after" json:"collapse-after"`
+	CollapseAfterRows int       `yaml:"collapse-after-rows" json:"collapse-after-rows"`
+	Channels          []string  `yaml:"channels" json:"channels"`
+	Playlists         []string  `yaml:"playlists" json:"playlists"`
+	Limit             int       `yaml:"limit" json:"limit"`
+	IncludeShorts     bool      `yaml:"include-shorts" json:"include-shorts"`
 }
 
 func (widget *videosWidget) initialize() error {

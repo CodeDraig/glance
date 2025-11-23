@@ -18,14 +18,14 @@ var extensionWidgetTemplate = mustParseTemplate("extension.html", "widget-base.h
 const extensionWidgetDefaultTitle = "Extension"
 
 type extensionWidget struct {
-	widgetBase          `yaml:",inline"`
-	URL                 string               `yaml:"url"`
-	FallbackContentType string               `yaml:"fallback-content-type"`
-	Parameters          queryParametersField `yaml:"parameters"`
-	Headers             map[string]string    `yaml:"headers"`
-	AllowHtml           bool                 `yaml:"allow-potentially-dangerous-html"`
-	Extension           extension            `yaml:"-"`
-	cachedHTML          template.HTML        `yaml:"-"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	URL                 string               `yaml:"url" json:"url"`
+	FallbackContentType string               `yaml:"fallback-content-type" json:"fallback-content-type"`
+	Parameters          queryParametersField `yaml:"parameters" json:"parameters"`
+	Headers             map[string]string    `yaml:"headers" json:"headers"`
+	AllowHtml           bool                 `yaml:"allow-potentially-dangerous-html" json:"allow-potentially-dangerous-html"`
+	Extension           extension            `yaml:"-" json:"-"`
+	cachedHTML          template.HTML        `yaml:"-" json:"-"`
 }
 
 func (widget *extensionWidget) initialize() error {
@@ -89,11 +89,11 @@ const (
 )
 
 type extensionRequestOptions struct {
-	URL                 string               `yaml:"url"`
-	FallbackContentType string               `yaml:"fallback-content-type"`
-	Parameters          queryParametersField `yaml:"parameters"`
-	Headers             map[string]string    `yaml:"headers"`
-	AllowHtml           bool                 `yaml:"allow-potentially-dangerous-html"`
+	URL                 string               `yaml:"url" json:"url"`
+	FallbackContentType string               `yaml:"fallback-content-type" json:"fallback-content-type"`
+	Parameters          queryParametersField `yaml:"parameters" json:"parameters"`
+	Headers             map[string]string    `yaml:"headers" json:"headers"`
+	AllowHtml           bool                 `yaml:"allow-potentially-dangerous-html" json:"allow-potentially-dangerous-html"`
 }
 
 type extension struct {

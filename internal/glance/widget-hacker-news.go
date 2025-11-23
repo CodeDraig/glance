@@ -12,14 +12,14 @@ import (
 )
 
 type hackerNewsWidget struct {
-	widgetBase          `yaml:",inline"`
-	Posts               forumPostList `yaml:"-"`
-	Limit               int           `yaml:"limit"`
-	SortBy              string        `yaml:"sort-by"`
-	ExtraSortBy         string        `yaml:"extra-sort-by"`
-	CollapseAfter       int           `yaml:"collapse-after"`
-	CommentsUrlTemplate string        `yaml:"comments-url-template"`
-	ShowThumbnails      bool          `yaml:"-"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	Posts               forumPostList `yaml:"-" json:"-"`
+	Limit               int           `yaml:"limit" json:"limit"`
+	SortBy              string        `yaml:"sort-by" json:"sort-by"`
+	ExtraSortBy         string        `yaml:"extra-sort-by" json:"extra-sort-by"`
+	CollapseAfter       int           `yaml:"collapse-after" json:"collapse-after"`
+	CommentsUrlTemplate string        `yaml:"comments-url-template" json:"comments-url-template"`
+	ShowThumbnails      bool          `yaml:"-" json:"-"`
 }
 
 func (widget *hackerNewsWidget) initialize() error {

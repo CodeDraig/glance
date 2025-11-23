@@ -9,9 +9,9 @@ import (
 var oldCalendarWidgetTemplate = mustParseTemplate("old-calendar.html", "widget-base.html")
 
 type oldCalendarWidget struct {
-	widgetBase  `yaml:",inline"`
+	widgetBase  `yaml:",inline" json:",inline"`
 	Calendar    *calendar
-	StartSunday bool `yaml:"start-sunday"`
+	StartSunday bool `yaml:"start-sunday" json:"start-sunday"`
 }
 
 func (widget *oldCalendarWidget) initialize() error {

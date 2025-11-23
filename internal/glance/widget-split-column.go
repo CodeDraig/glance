@@ -9,9 +9,9 @@ import (
 var splitColumnWidgetTemplate = mustParseTemplate("split-column.html", "widget-base.html")
 
 type splitColumnWidget struct {
-	widgetBase          `yaml:",inline"`
-	containerWidgetBase `yaml:",inline"`
-	MaxColumns          int `yaml:"max-columns"`
+	widgetBase          `yaml:",inline" json:",inline"`
+	containerWidgetBase `yaml:",inline" json:",inline"`
+	MaxColumns          int `yaml:"max-columns" json:"max-columns"`
 }
 
 func (widget *splitColumnWidget) initialize() error {

@@ -9,15 +9,15 @@ import (
 )
 
 type lobstersWidget struct {
-	widgetBase     `yaml:",inline"`
-	Posts          forumPostList `yaml:"-"`
-	InstanceURL    string        `yaml:"instance-url"`
-	CustomURL      string        `yaml:"custom-url"`
-	Limit          int           `yaml:"limit"`
-	CollapseAfter  int           `yaml:"collapse-after"`
-	SortBy         string        `yaml:"sort-by"`
-	Tags           []string      `yaml:"tags"`
-	ShowThumbnails bool          `yaml:"-"`
+	widgetBase     `yaml:",inline" json:",inline"`
+	Posts          forumPostList `yaml:"-" json:"-"`
+	InstanceURL    string        `yaml:"instance-url" json:"instance-url"`
+	CustomURL      string        `yaml:"custom-url" json:"custom-url"`
+	Limit          int           `yaml:"limit" json:"limit"`
+	CollapseAfter  int           `yaml:"collapse-after" json:"collapse-after"`
+	SortBy         string        `yaml:"sort-by" json:"sort-by"`
+	Tags           []string      `yaml:"tags" json:"tags"`
+	ShowThumbnails bool          `yaml:"-" json:"-"`
 }
 
 func (widget *lobstersWidget) initialize() error {

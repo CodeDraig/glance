@@ -121,7 +121,7 @@ func newApplication(c *config) (*application, error) {
 			TextSaturationMultiplier: 0.5,
 		})
 
-		themePresets, err := newOrderedYAMLMap(themeKeys, themeProps)
+		themePresets, err := newOrderedMap(themeKeys, themeProps)
 		if err != nil {
 			return nil, fmt.Errorf("creating theme presets: %v", err)
 		}
